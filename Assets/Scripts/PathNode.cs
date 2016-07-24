@@ -4,30 +4,30 @@ using System.Collections.Generic;
 
 public class PathNode : MonoBehaviour {
 
-    public static Dictionary<NodeCoordinate, PathNode> pathNodes;
+    public static Dictionary<Vector2, PathNode> pathNodes;
 
     public PathNode left;
     public PathNode right;
     public PathNode forward;
     public PathNode backward;
 
-    private NodeCoordinate coord{get; set;}
+    private Vector2 coord{get; set;}
 
     void Awake()
     {
         if (PathNode.pathNodes == null)
         {
-            PathNode.pathNodes = new Dictionary<NodeCoordinate, PathNode>(new NodeCoordinateComparer());
+            PathNode.pathNodes = new Dictionary<Vector2, PathNode>();
         }
 
-        NodeCoordinate coord = new NodeCoordinate(transform.position.x, transform.position.z);
+        Vector2 coord = new Vector2(transform.position.x, transform.position.z);
         this.coord = coord;
         PathNode.pathNodes.Add(coord, this);
 
-        NodeCoordinate leftChord = new NodeCoordinate(coord.x - 1, coord.z);
-        NodeCoordinate rightChord = new NodeCoordinate(coord.x + 1, coord.z);
-        NodeCoordinate forwardChord = new NodeCoordinate(coord.x, coord.z + 1);
-        NodeCoordinate backwardChord = new NodeCoordinate(coord.x, coord.z - 1);
+        Vector2 leftChord = new Vector2(coord.x - 1, coord.y);
+        Vector2 rightChord = new Vector2(coord.x + 1, coord.y);
+        Vector2 forwardChord = new Vector2(coord.x, coord.y + 1);
+        Vector2 backwardChord = new Vector2(coord.x, coord.y - 1);
 
         if (PathNode.pathNodes.ContainsKey(leftChord))
         {
@@ -50,46 +50,4 @@ public class PathNode : MonoBehaviour {
             this.backward.forward = this;
         }
     }
-}
-
-public class NodeCoordinate
-{
-    public float x;
-    public float z;
-
-    public NodeCoordinate(float x, float z)
-    {
-        this.x = x;
-        this.z = z;
-    }
-
-    public bool Equals(NodeCoordinate coord)
-    {
-        return (this.x == coord.x && this.z == coord.z);
-    }
-
-    public override int GetHashCode()
-    {
-        return string.Format("{0}x{1}", this.x, this.z).GetHashCode();
-    }
-
-    public override string ToString()
-    {
-        return "Coordinate: " + this.x + " x " + this.z;
-    }
-}
-
-public class NodeCoordinateComparer : IEqualityComparer<NodeCoordinate>
-{
-    public bool Equals(NodeCoordinate a, NodeCoordinate b)
-    {
-        return (a.x == b.x && a.z == b.z);
-    }
-
-    public int GetHashCode(NodeCoordinate coord)
-    {
-        return string.Format("{0}x{1}", coord.x, coord.z).GetHashCode();
-    }
-
-
 }
