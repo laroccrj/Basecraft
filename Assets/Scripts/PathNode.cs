@@ -29,8 +29,7 @@ public class PathNode : MonoBehaviour {
     public PathNode backward;
 
 	public Dictionary<Vector2, int> distances;
-
-	public Vector2 coord{get; set;}
+	public Vector2 coord;
 
     void Awake()
     {
@@ -103,19 +102,19 @@ public class PathNode : MonoBehaviour {
 	{
 		bool change = false;
 
-		if(this.checkDistanceForNode(this.right)) {
+		if(this.right != null && this.checkDistanceForNode(this.right)) {
 			change = true;
 		}
 
-		if(this.checkDistanceForNode(this.left)) {
+		if(this.left != null && this.checkDistanceForNode(this.left)) {
 			change = true;
 		}
 
-		if(this.checkDistanceForNode(this.forward)) {
+		if(this.forward != null && this.checkDistanceForNode(this.forward)) {
 			change = true;
 		}
 
-		if(this.checkDistanceForNode(this.backward)) {
+		if(this.backward != null && this.checkDistanceForNode(this.backward)) {
 			change = true;
 		}
 
@@ -125,7 +124,6 @@ public class PathNode : MonoBehaviour {
 	private bool checkDistanceForNode(PathNode node)
 	{
 		bool change = false;
-		Debug.Log(node.coord);
 
 		foreach(Vector2 coord in node.distances.Keys)
 		{
