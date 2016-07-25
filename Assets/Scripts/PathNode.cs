@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 
 public class PathNode : MonoBehaviour {
 
@@ -128,13 +129,36 @@ public class PathNode : MonoBehaviour {
 		foreach(Vector2 coord in node.distances.Keys)
 		{
 			int distance = node.distances[coord];
-			if(distance != -1 && distance < this.distances[coord])
+			if(distance != -1 && (this.distances[coord] == -1 || distance < this.distances[coord]))
 			{
-				this.distances[coord] = distance + this.distances[node.coord];
+				this.distances[coord] = distance + 1;
 				change = true;
 			}
 		}
 
 		return change;
+	}
+
+	public void log()
+	{
+		foreach(Vector2 coord in this.distances.Keys)
+		{
+			Debug.Log(coord + " : " + this.distances[coord]);
+		}
+	}
+}
+
+[CustomEditor(typeof(PathNode))]
+public class ObjectBuilderEditor : Editor
+{
+	public override void OnInspectorGUI()
+	{
+		DrawDefaultInspector();
+
+		PathNode node = (PathNode)target;
+		if(GUILayout.Button("Log"))
+		{
+			node.log();
+		}
 	}
 }
